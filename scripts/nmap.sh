@@ -14,7 +14,7 @@ mkdir -p results
 echo "Starting Nmap scan on $TARGET..."
 # -sV: Probe open ports to determine service/version info
 # -sC: default scripts (safe vulnerabilities)
-# -Pn: Treat all hosts as online -- skip host discovery
+# -Pn: Treat all hosts as online
 nmap -sV -sC -Pn "$TARGET" -oN "$OUTPUT_FILE"
 
 if [ $? -eq 0 ]; then

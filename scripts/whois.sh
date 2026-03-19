@@ -8,5 +8,4 @@ if [ -z "$TARGET" ]; then
     exit 1
 fi
 
-# We let Python handle the filtering and file saving for Whois
 whois "$TARGET"
