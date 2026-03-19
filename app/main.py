@@ -1,5 +1,8 @@
 import sys
 import subprocess
+import os
+
+RESULTS_DIR = "results"
 
 def main():
     if len(sys.argv) < 2:
@@ -19,6 +22,14 @@ def main():
 
         if result.returncode == 0:
             print(result.stdout)
+
+            os.makedirs(RESULTS_DIR, exist_ok=True)
+            output_file = os.path.join(RESULTS_DIR, "nmap.txt")
+
+            with open(output_file, "w") as f:
+                f.write(result.stdout)
+
+            print(f"Results saved to {output_file}")
         else:
             print("nmap failed:")
             print(result.stderr)
