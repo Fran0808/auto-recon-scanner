@@ -9,3 +9,10 @@ if [ -z "$TARGET" ]; then
 fi
 
 whois "$TARGET"
+
+if [ $? -eq 0 ]; then
+    exit 0
+else
+    echo "Error: Whois lookup failed."
+    exit 1
+fi
