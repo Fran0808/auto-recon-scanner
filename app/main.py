@@ -10,17 +10,22 @@ def main():
     print(f"Target: {target}")
     print("Running nmap scan...")
 
-    result = subprocess.run(
-        ["nmap", "-sV", target],
-        capture_output=True,
-        text=True
-    )
+    try:
+        result = subprocess.run(
+            ["nmap", "-sV", target],
+            capture_output=True,
+            text=True
+        )
 
-    if result.returncode == 0:
-        print(result.stdout)
-    else:
-        print("nmap failed:")
-        print(result.stderr)
+        if result.returncode == 0:
+            print(result.stdout)
+        else:
+            print("nmap failed:")
+            print(result.stderr)
+
+    except KeyboardInterrupt:
+        print("\nScan has been cancelled by user")
+        sys.exit(0)
 
 if __name__ == "__main__":
     main()
