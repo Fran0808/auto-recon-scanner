@@ -8,18 +8,18 @@ def main():
 
     target = sys.argv[1]
     print(f"Target: {target}")
+    print("Running nmap scan...")
 
     result = subprocess.run(
-        ["nmap", "--version"],
+        ["nmap", "-sV", target],
         capture_output=True,
         text=True
     )
 
     if result.returncode == 0:
-        print("nmap is available:")
         print(result.stdout)
     else:
-        print("nmap not found or failed:")
+        print("nmap failed:")
         print(result.stderr)
 
 if __name__ == "__main__":
