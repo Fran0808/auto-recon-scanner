@@ -2,7 +2,9 @@ import sys
 import subprocess
 import os
 
-RESULTS_DIR = "results"
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SCRIPTS_DIR = os.path.join(BASE_DIR, "scripts")
+RESULTS_DIR = os.path.join(BASE_DIR, "results")
 
 # ANSI Colors
 CYAN = "\033[96m"
@@ -45,21 +47,17 @@ def filter_whois(raw_output):
 
 def run_nmap(target):
     print(f"\n{CYAN}[*] Running nmap scan...{RESET}")
+    script_path = os.path.join(SCRIPTS_DIR, "nmap.sh")
+    
     result = subprocess.run(
-        ["nmap", "-sV", target],
+        ["bash", script_path, target],
         capture_output=True,
         text=True
     )
 
     if result.returncode == 0:
         print(result.stdout)
-
-        os.makedirs(RESULTS_DIR, exist_ok=True)
         output_file = os.path.join(RESULTS_DIR, "nmap.txt")
-
-        with open(output_file, "w") as f:
-            f.write(result.stdout)
-
         print(f"{GREEN}[+] Results saved to {output_file}{RESET}")
     else:
         print(f"{RED}[-] nmap failed:{RESET}")
@@ -67,9 +65,10 @@ def run_nmap(target):
 
 def run_whois(target):
     print(f"\n{CYAN}[*] Running whois lookup...{RESET}")
+    script_path = os.path.join(SCRIPTS_DIR, "whois.sh")
 
     result = subprocess.run(
-        ["whois", target],
+        ["bash", script_path, target],
         capture_output=True,
         text=True
     )
