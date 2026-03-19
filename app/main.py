@@ -4,6 +4,39 @@ import os
 
 RESULTS_DIR = "results"
 
+WHOIS_FIELDS = [
+    "Domain Name",
+    "Creation Date",
+    "Registry Expiry Date",
+    "Registrar Registration Expiration Date",
+    "Updated Date",
+    "Registrar:",
+    "Domain Status",
+    "Name Server",
+    "DNSSEC",
+    "Registrant Country",
+    "Registrant State/Province",
+]
+
+def filter_whois(raw_output):
+    seen = set()
+    filtered = []
+
+    for line in raw_output.splitlines():
+        stripped = line.strip()
+
+        if "REDACTED" in stripped:
+            continue
+
+        for field in WHOIS_FIELDS:
+            if stripped.lower().startswith(field.lower()):
+                if field not in seen:
+                    seen.add(field)
+                    filtered.append(stripped)
+                break
+
+    return "\n".join(filtered)
+
 def run_nmap(target):
     print("Running nmap scan...")
 
@@ -37,13 +70,14 @@ def run_whois(target):
     )
 
     if result.returncode == 0:
-        print(result.stdout)
+        clean_output = filter_whois(result.stdout)
+        print(clean_output)
 
         os.makedirs(RESULTS_DIR, exist_ok=True)
         output_file = os.path.join(RESULTS_DIR, "whois.txt")
 
         with open(output_file, "w") as f:
-            f.write(result.stdout)
+            f.write(clean_output)
 
         print(f"Results saved to {output_file}")
     else:
