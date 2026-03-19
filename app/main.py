@@ -4,6 +4,12 @@ import os
 
 RESULTS_DIR = "results"
 
+# ANSI Colors
+CYAN = "\033[96m"
+GREEN = "\033[92m"
+RED = "\033[91m"
+RESET = "\033[0m"
+
 WHOIS_FIELDS = [
     "Domain Name",
     "Creation Date",
@@ -38,8 +44,7 @@ def filter_whois(raw_output):
     return "\n".join(filtered)
 
 def run_nmap(target):
-    print("Running nmap scan...")
-
+    print(f"\n{CYAN}[*] Running nmap scan...{RESET}")
     result = subprocess.run(
         ["nmap", "-sV", target],
         capture_output=True,
@@ -55,13 +60,13 @@ def run_nmap(target):
         with open(output_file, "w") as f:
             f.write(result.stdout)
 
-        print(f"Results saved to {output_file}")
+        print(f"{GREEN}[+] Results saved to {output_file}{RESET}")
     else:
-        print("nmap failed:")
+        print(f"{RED}[-] nmap failed:{RESET}")
         print(result.stderr)
 
 def run_whois(target):
-    print("Running whois lookup...")
+    print(f"\n{CYAN}[*] Running whois lookup...{RESET}")
 
     result = subprocess.run(
         ["whois", target],
@@ -79,9 +84,9 @@ def run_whois(target):
         with open(output_file, "w") as f:
             f.write(clean_output)
 
-        print(f"Results saved to {output_file}")
+        print(f"{GREEN}[+] Results saved to {output_file}{RESET}")
     else:
-        print("whois failed:")
+        print(f"{RED}[-] whois failed:{RESET}")
         print(result.stderr)
 
 def main():
@@ -90,13 +95,13 @@ def main():
         sys.exit(1)
 
     target = sys.argv[1]
-    print(f"Target: {target}")
+    print(f"{CYAN}Target: {target}{RESET}")
 
     try:
         run_whois(target)
         run_nmap(target)
     except KeyboardInterrupt:
-        print("\nScan has been cancelled by user")
+        print(f"\n{RED}[!] Scan has been cancelled by user{RESET}")
         sys.exit(0)
 
 if __name__ == "__main__":
