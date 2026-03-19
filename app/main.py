@@ -14,7 +14,13 @@ def main():
         capture_output=True,
         text=True
     )
-    print(result.stdout)
+
+    if result.returncode == 0:
+        print("nmap is available:")
+        print(result.stdout)
+    else:
+        print("nmap not found or failed:")
+        print(result.stderr)
 
 if __name__ == "__main__":
     main()
