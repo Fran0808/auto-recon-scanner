@@ -8,7 +8,7 @@ if [ -z "$TARGET" ]; then
     exit 1
 fi
 
-whatweb -a 3 "$TARGET"
+whatweb -a 3 --color=never "$TARGET"
 
 if [ $? -eq 0 ]; then
     exit 0
