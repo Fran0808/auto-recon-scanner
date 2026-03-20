@@ -88,6 +88,30 @@ def run_whois(target):
         print(f"{RED}[-] whois failed:{RESET}")
         print(result.stderr)
 
+def run_whatweb(target):
+    print(f"\n{CYAN}[*] Running whatweb fingerprinting...{RESET}")
+    script_path = os.path.join(SCRIPTS_DIR, "whatweb.sh")
+
+    result = subprocess.run(
+        ["bash", script_path, target],
+        capture_output=True,
+        text=True
+    )
+
+    if result.returncode == 0:
+        print(result.stdout.strip())
+        
+        os.makedirs(RESULTS_DIR, exist_ok=True)
+        output_file = os.path.join(RESULTS_DIR, "whatweb.txt")
+
+        with open(output_file, "w") as f:
+            f.write(result.stdout)
+
+        print(f"{GREEN}[+] Results saved to {output_file}{RESET}")
+    else:
+        print(f"{RED}[-] whatweb failed:{RESET}")
+        print(result.stderr)
+
 def main():
     if len(sys.argv) < 2:
         print("Usage: python main.py <target>")
@@ -98,6 +122,7 @@ def main():
 
     try:
         run_whois(target)
+        run_whatweb(target)
         run_nmap(target)
     except KeyboardInterrupt:
         print(f"\n{RED}Scan has been cancelled by user{RESET}")
