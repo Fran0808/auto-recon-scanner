@@ -136,6 +136,24 @@ def run_findomain(target):
         print(f"{RED}[-] findomain failed:{RESET}")
         print(result.stderr)
 
+def run_gobuster(target):
+    print(f"\n{CYAN}[*] Running gobuster directory scan...{RESET}")
+    script_path = os.path.join(SCRIPTS_DIR, "gobuster.sh")
+
+    result = subprocess.run(
+        ["bash", script_path, target],
+        capture_output=True,
+        text=True
+    )
+
+    if result.returncode == 0:
+        print(result.stdout.strip())
+        output_file = os.path.join(RESULTS_DIR, "gobuster.txt")
+        print(f"{GREEN}[+] Results saved to {output_file}{RESET}")
+    else:
+        print(f"{RED}[-] gobuster failed:{RESET}")
+        print(result.stderr)
+
 def main():
     if len(sys.argv) < 2:
         print("Usage: python main.py <target>")
@@ -148,6 +166,7 @@ def main():
         run_whois(target)
         run_whatweb(target)
         run_findomain(target)
+        run_gobuster(target)
         run_nmap(target)
     except KeyboardInterrupt:
         print(f"\n{RED}Scan has been cancelled by user{RESET}")
