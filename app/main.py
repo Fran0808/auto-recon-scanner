@@ -100,7 +100,7 @@ def main():
         run_whois(target)
         run_nmap(target)
     except KeyboardInterrupt:
-        print(f"\n{RED}[!] Scan has been cancelled by user{RESET}")
+        print(f"\n{RED}Scan has been cancelled by user{RESET}")
         sys.exit(0)
 
 if __name__ == "__main__":
