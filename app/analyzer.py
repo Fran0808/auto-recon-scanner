@@ -37,9 +37,32 @@ def parse_whatweb(filepath):
                 
     return sorted(list(technologies))
 
+def parse_gobuster(filepath):
+    directories = []
+    
+    if not os.path.exists(filepath):
+        print(f"Warning: File not found -> {filepath}")
+        return directories
+
+    with open(filepath, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+           
+            if "(Status:" in line and "429" not in line:
+                parts = line.split()
+                if len(parts) >= 3:
+                    path = parts[0]
+                    status = parts[2].replace(")", "")
+                    directories.append({"path": path, "status": status})
+                    
+    return directories
+
 if __name__ == "__main__":
     nmap_file = os.path.join("results", "nmap.txt")
     whatweb_file = os.path.join("results", "whatweb.txt")
+    gobuster_file = os.path.join("results", "gobuster.txt")
     
     print("\n--- Testing Nmap Parser ---")
     ports = parse_nmap(nmap_file)
@@ -52,3 +75,9 @@ if __name__ == "__main__":
     for t in techs:
         print(f" detected: {t}")
     print(f"Total technologies found: {len(techs)}")
+
+    print("\n--- Testing Gobuster Parser ---")
+    dirs = parse_gobuster(gobuster_file)
+    for d in dirs:
+        print(f"Found path: /{d['path']} | Status: {d['status']}")
+    print(f"Total REAL directories found: {len(dirs)}")
