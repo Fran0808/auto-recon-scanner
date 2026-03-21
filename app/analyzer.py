@@ -59,10 +59,26 @@ def parse_gobuster(filepath):
                     
     return directories
 
+def parse_findomain(filepath):
+    subdomains = []
+    
+    if not os.path.exists(filepath):
+        print(f"Warning: File not found -> {filepath}")
+        return subdomains
+
+    with open(filepath, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                subdomains.append(line)
+                
+    return subdomains
+
 if __name__ == "__main__":
     nmap_file = os.path.join("results", "nmap.txt")
     whatweb_file = os.path.join("results", "whatweb.txt")
     gobuster_file = os.path.join("results", "gobuster.txt")
+    findomain_file = os.path.join("results", "findomain.txt")
     
     print("\n--- Testing Nmap Parser ---")
     ports = parse_nmap(nmap_file)
@@ -81,3 +97,9 @@ if __name__ == "__main__":
     for d in dirs:
         print(f"Found path: /{d['path']} | Status: {d['status']}")
     print(f"Total REAL directories found: {len(dirs)}")
+
+    print("\n--- Testing Findomain Parser ---")
+    subs = parse_findomain(findomain_file)
+    for s in subs:
+        print(f"Subdomain: {s}")
+    print(f"Total subdomains found: {len(subs)}")
