@@ -17,7 +17,7 @@ if [[ ! "$TARGET" =~ ^http ]]; then
 fi
 
 # Run gobuster in dir mode
-gobuster dir -u "$TARGET" -w "$WORDLIST" -t 50 -q --wildcard -o "$OUTPUT_FILE"
+gobuster dir -u "$TARGET" -w "$WORDLIST" -t 50 -q -o "$OUTPUT_FILE"
 
 if [ $? -eq 0 ]; then
     exit 0
