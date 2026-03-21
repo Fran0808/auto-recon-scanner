@@ -13,11 +13,11 @@ fi
 mkdir -p results
 
 if [[ ! "$TARGET" =~ ^http ]]; then
-    TARGET="http://$TARGET"
+    TARGET="https://$TARGET"
 fi
 
 # Run gobuster in dir mode
-gobuster dir -u "$TARGET" -w "$WORDLIST" -t 50 -q -o "$OUTPUT_FILE"
+gobuster dir -u "$TARGET" -w "$WORDLIST" -t 50 -q --wildcard -o "$OUTPUT_FILE"
 
 if [ $? -eq 0 ]; then
     exit 0
