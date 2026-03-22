@@ -38,7 +38,7 @@ def parse_whatweb(filepath):
                 
     return sorted(list(technologies))
 
-def parse_gobuster(filepath):
+def parse_gobuster(filepath, target=""):
     directories = []
     
     if not os.path.exists(filepath):
@@ -54,9 +54,10 @@ def parse_gobuster(filepath):
             if "(Status:" in line and "429" not in line:
                 parts = line.split()
                 if len(parts) >= 3:
-                    path = parts[0]
+                    path_str = parts[0].strip('/')
                     status = parts[2].replace(")", "")
-                    directories.append({"path": path, "status": status})
+                    full_url = f"https://{target}/{path_str}" if target else f"/{path_str}"
+                    directories.append({"url": full_url, "status": status})
                     
     return directories
 
@@ -75,7 +76,10 @@ def parse_findomain(filepath):
                 
     return subdomains
 
-def generate_report(results_dir):
+def generate_report(results_dir, target=""):
+    """
+    Combines all parsers to build a master report dictionary.
+    """
     nmap_file = os.path.join(results_dir, "nmap.txt")
     whatweb_file = os.path.join(results_dir, "whatweb.txt")
     gobuster_file = os.path.join(results_dir, "gobuster.txt")
@@ -84,7 +88,7 @@ def generate_report(results_dir):
     report = {
         "open_ports": parse_nmap(nmap_file),
         "web_technologies": parse_whatweb(whatweb_file),
-        "directories": parse_gobuster(gobuster_file),
+        "directories": parse_gobuster(gobuster_file, target),
         "subdomains": parse_findomain(findomain_file)
     }
     return report
@@ -113,9 +117,9 @@ if __name__ == "__main__":
     print(f"Total technologies found: {len(techs)}")
 
     print("\n--- Testing Gobuster Parser ---")
-    dirs = parse_gobuster(gobuster_file)
+    dirs = parse_gobuster(gobuster_file, target="testdomain.com")
     for d in dirs:
-        print(f"Found path: /{d['path']} | Status: {d['status']}")
+        print(f"Found URL: {d['url']} | Status: {d['status']}")
     print(f"Total REAL directories found: {len(dirs)}")
 
     print("\n--- Testing Findomain Parser ---")
