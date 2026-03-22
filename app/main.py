@@ -1,6 +1,7 @@
 import sys
 import subprocess
 import os
+import analyzer
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPTS_DIR = os.path.join(BASE_DIR, "scripts")
@@ -168,6 +169,18 @@ def main():
         run_findomain(target)
         run_gobuster(target)
         run_nmap(target)
+
+        # Compilation
+        print(f"\n{CYAN}[*] Starting Data Analysis and Compiling Report...{RESET}")
+        report_data = analyzer.generate_report(RESULTS_DIR)
+        
+        report_path = os.path.join(RESULTS_DIR, "final_report.json")
+        analyzer.save_report_json(report_data, report_path)
+
+        print(f"\n{GREEN}=========================================={RESET}")
+        print(f"{GREEN}    SCAN COMPLETE FOR: {target}           {RESET}")
+        print(f"{GREEN}=========================================={RESET}")
+        
     except KeyboardInterrupt:
         print(f"\n{RED}Scan has been cancelled by user{RESET}")
         sys.exit(0)
