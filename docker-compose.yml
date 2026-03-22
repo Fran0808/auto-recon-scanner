@@ -1,0 +1,7 @@
+version: "3.8"
+
+services:
+  scanner:
+    build: .
+    volumes:
+      - ./results:/scanner/results
