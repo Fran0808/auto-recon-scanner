@@ -1,4 +1,5 @@
 import os
+import json
 
 def parse_nmap(filepath):
     open_ports = []
@@ -73,6 +74,25 @@ def parse_findomain(filepath):
                 subdomains.append(line)
                 
     return subdomains
+
+def generate_report(results_dir):
+    nmap_file = os.path.join(results_dir, "nmap.txt")
+    whatweb_file = os.path.join(results_dir, "whatweb.txt")
+    gobuster_file = os.path.join(results_dir, "gobuster.txt")
+    findomain_file = os.path.join(results_dir, "findomain.txt")
+
+    report = {
+        "open_ports": parse_nmap(nmap_file),
+        "web_technologies": parse_whatweb(whatweb_file),
+        "directories": parse_gobuster(gobuster_file),
+        "subdomains": parse_findomain(findomain_file)
+    }
+    return report
+
+def save_report_json(report_data, filepath):
+    with open(filepath, "w", encoding="utf-8") as f:
+        json.dump(report_data, f, indent=4)
+    print(f"\n[+] Final OSINT Report saved to: {filepath}")
 
 if __name__ == "__main__":
     nmap_file = os.path.join("results", "nmap.txt")
