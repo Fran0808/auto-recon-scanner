@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     whois \
     whatweb \
     gobuster \
+    dirb \
     wget \
     unzip \
     && rm -rf /var/lib/apt/lists/*
