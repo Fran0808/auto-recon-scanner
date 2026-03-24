@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     && rm -rf /var/lib/apt/lists/*
 
-RUN wget https://github.com/Findomain/Findomain/releases/download/9.0.4/findomain-linux.zip \
+RUN wget https://github.com/Findomain/Findomain/releases/download/10.0.1/findomain-linux.zip \
     && unzip findomain-linux.zip \
     && mv findomain /usr/local/bin/findomain \
     && chmod +x /usr/local/bin/findomain \
