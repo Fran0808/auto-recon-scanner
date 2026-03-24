@@ -38,7 +38,7 @@ sudo apt-get install python3 nmap whatweb gobuster dirb wget unzip
 
 2. Install Findomain manually and place it in your PATH:
 ```bash
-wget https://github.com/Findomain/Findomain/releases/download/9.0.4/findomain-linux.zip
+wget https://github.com/Findomain/Findomain/releases/download/10.0.1/findomain-linux.zip
 unzip findomain-linux.zip
 sudo mv findomain /usr/local/bin/findomain
 sudo chmod +x /usr/local/bin/findomain
