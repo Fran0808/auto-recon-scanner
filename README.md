@@ -8,6 +8,7 @@ Auto Recon Scanner is an automated OSINT and reconnaissance orchestration tool. 
 - Hidden Directory Discovery (Gobuster)
 - Subdomain Enumeration (Findomain)
 - Web Technology Fingerprinting (WhatWeb)
+- Blazing Fast Multithreading
 - Automated JSON Report Generation for easy integration with other tools
 
 ## Installation and Usage
