@@ -48,7 +48,6 @@ def filter_whois(raw_output):
     return "\n".join(filtered)
 
 def run_nmap(target: str) -> None:
-    print(f"\n{CYAN}[*] Running nmap scan...{RESET}")
     script_path = os.path.join(SCRIPTS_DIR, "nmap.sh")
     
     result = subprocess.run(
@@ -58,15 +57,12 @@ def run_nmap(target: str) -> None:
     )
 
     if result.returncode == 0:
-        print(result.stdout)
         output_file = os.path.join(RESULTS_DIR, "nmap.txt")
-        print(f"{GREEN}[+] Results saved to {output_file}{RESET}")
     else:
         print(f"{RED}[-] nmap failed:{RESET}")
         print(result.stderr)
 
 def run_whois(target: str) -> None:
-    print(f"\n{CYAN}[*] Running whois lookup...{RESET}")
     script_path = os.path.join(SCRIPTS_DIR, "whois.sh")
 
     result = subprocess.run(
@@ -77,21 +73,17 @@ def run_whois(target: str) -> None:
 
     if result.returncode == 0:
         clean_output = filter_whois(result.stdout)
-        print(clean_output)
 
         os.makedirs(RESULTS_DIR, exist_ok=True)
         output_file = os.path.join(RESULTS_DIR, "whois.txt")
 
         with open(output_file, "w") as f:
             f.write(clean_output)
-
-        print(f"{GREEN}[+] Results saved to {output_file}{RESET}")
     else:
         print(f"{RED}[-] whois failed:{RESET}")
         print(result.stderr)
 
 def run_whatweb(target: str) -> None:
-    print(f"\n{CYAN}[*] Running whatweb fingerprinting...{RESET}")
     script_path = os.path.join(SCRIPTS_DIR, "whatweb.sh")
 
     result = subprocess.run(
@@ -101,21 +93,16 @@ def run_whatweb(target: str) -> None:
     )
 
     if result.returncode == 0:
-        print(result.stdout.strip())
-        
         os.makedirs(RESULTS_DIR, exist_ok=True)
         output_file = os.path.join(RESULTS_DIR, "whatweb.txt")
 
         with open(output_file, "w") as f:
             f.write(result.stdout)
-
-        print(f"{GREEN}[+] Results saved to {output_file}{RESET}")
     else:
         print(f"{RED}[-] whatweb failed:{RESET}")
         print(result.stderr)
 
 def run_findomain(target: str) -> None:
-    print(f"\n{CYAN}[*] Running findomain...{RESET}")
     script_path = os.path.join(SCRIPTS_DIR, "findomain.sh")
 
     result = subprocess.run(
@@ -125,21 +112,16 @@ def run_findomain(target: str) -> None:
     )
 
     if result.returncode == 0:
-        print(result.stdout.strip())
-        
         os.makedirs(RESULTS_DIR, exist_ok=True)
         output_file = os.path.join(RESULTS_DIR, "findomain.txt")
 
         with open(output_file, "w") as f:
             f.write(result.stdout)
-
-        print(f"{GREEN}[+] Results saved to {output_file}{RESET}")
     else:
         print(f"{RED}[-] findomain failed:{RESET}")
         print(result.stderr)
 
 def run_gobuster(target: str) -> None:
-    print(f"\n{CYAN}[*] Running gobuster directory scan...{RESET}")
     script_path = os.path.join(SCRIPTS_DIR, "gobuster.sh")
 
     result = subprocess.run(
@@ -149,9 +131,7 @@ def run_gobuster(target: str) -> None:
     )
 
     if result.returncode == 0:
-        print(result.stdout.strip())
         output_file = os.path.join(RESULTS_DIR, "gobuster.txt")
-        print(f"{GREEN}[+] Results saved to {output_file}{RESET}")
     else:
         print(f"{RED}[-] gobuster failed:{RESET}")
         print(result.stderr)
@@ -165,7 +145,7 @@ def main():
     print(f"{CYAN}Target: {target}{RESET}")
 
     try:
-        print(f"\n{CYAN}[*] Unleashing parallel scanner workforce...{RESET}")
+        print(f"\n{CYAN}[*] Starting scanner...{RESET}")
         
         with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
             tasks = [
@@ -176,7 +156,15 @@ def main():
                 executor.submit(run_nmap, target)
             ]
             
-            concurrent.futures.wait(tasks)
+            completed = 0
+            total = len(tasks)
+            print(f"{GREEN}[*] Progress: [{completed}/{total}] tools finished...{RESET}", end='\r')
+            
+            for future in concurrent.futures.as_completed(tasks):
+                completed += 1
+                print(f"{GREEN}[*] Progress: [{completed}/{total}] tools finished...{RESET}", end='\r')
+                
+            print()
 
         print(f"\n{CYAN}[*] Starting Data Analysis and Compiling Report...{RESET}")
         report_data = analyzer.generate_report(RESULTS_DIR, target)
