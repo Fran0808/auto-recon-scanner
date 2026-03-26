@@ -5,3 +5,5 @@ services:
     build: .
     volumes:
       - ./results:/scanner/results
+      - ./app:/scanner/app
+      - ./scripts:/scanner/scripts
