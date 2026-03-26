@@ -1,8 +1,9 @@
 import sys
 import subprocess
 import os
+import time
 import concurrent.futures
-import analyzer 
+import analyzer # type: ignore
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPTS_DIR = os.path.join(BASE_DIR, "scripts")
@@ -141,11 +142,15 @@ def main():
         print("Usage: python main.py <target>")
         sys.exit(1)
 
-    target = sys.argv[1]
+    raw_target = sys.argv[1]
+    target = raw_target.replace("https://", "").replace("http://", "").strip("/")
+    
     print(f"{CYAN}Target: {target}{RESET}")
 
     try:
         print(f"\n{CYAN}[*] Starting scanner...{RESET}")
+        
+        start_time = time.time()
         
         with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
             tasks = [
@@ -171,9 +176,13 @@ def main():
         
         report_path = os.path.join(RESULTS_DIR, "final_report.json")
         analyzer.save_report_json(report_data, report_path)
+        
+        end_time = time.time()
+        elapsed = end_time - start_time
 
         print(f"\n{GREEN}=========================================={RESET}")
         print(f"{GREEN}    SCAN COMPLETE FOR: {target}           {RESET}")
+        print(f"{GREEN}    TIME ELAPSED: {elapsed:.2f} seconds    {RESET}")
         print(f"{GREEN}=========================================={RESET}")
         
     except KeyboardInterrupt:
