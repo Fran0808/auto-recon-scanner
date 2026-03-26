@@ -1,7 +1,8 @@
 import sys
 import subprocess
 import os
-import analyzer
+import concurrent.futures
+import analyzer 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPTS_DIR = os.path.join(BASE_DIR, "scripts")
@@ -46,7 +47,7 @@ def filter_whois(raw_output):
 
     return "\n".join(filtered)
 
-def run_nmap(target):
+def run_nmap(target: str) -> None:
     print(f"\n{CYAN}[*] Running nmap scan...{RESET}")
     script_path = os.path.join(SCRIPTS_DIR, "nmap.sh")
     
@@ -64,7 +65,7 @@ def run_nmap(target):
         print(f"{RED}[-] nmap failed:{RESET}")
         print(result.stderr)
 
-def run_whois(target):
+def run_whois(target: str) -> None:
     print(f"\n{CYAN}[*] Running whois lookup...{RESET}")
     script_path = os.path.join(SCRIPTS_DIR, "whois.sh")
 
@@ -89,7 +90,7 @@ def run_whois(target):
         print(f"{RED}[-] whois failed:{RESET}")
         print(result.stderr)
 
-def run_whatweb(target):
+def run_whatweb(target: str) -> None:
     print(f"\n{CYAN}[*] Running whatweb fingerprinting...{RESET}")
     script_path = os.path.join(SCRIPTS_DIR, "whatweb.sh")
 
@@ -113,7 +114,7 @@ def run_whatweb(target):
         print(f"{RED}[-] whatweb failed:{RESET}")
         print(result.stderr)
 
-def run_findomain(target):
+def run_findomain(target: str) -> None:
     print(f"\n{CYAN}[*] Running findomain...{RESET}")
     script_path = os.path.join(SCRIPTS_DIR, "findomain.sh")
 
@@ -137,7 +138,7 @@ def run_findomain(target):
         print(f"{RED}[-] findomain failed:{RESET}")
         print(result.stderr)
 
-def run_gobuster(target):
+def run_gobuster(target: str) -> None:
     print(f"\n{CYAN}[*] Running gobuster directory scan...{RESET}")
     script_path = os.path.join(SCRIPTS_DIR, "gobuster.sh")
 
@@ -164,13 +165,19 @@ def main():
     print(f"{CYAN}Target: {target}{RESET}")
 
     try:
-        run_whois(target)
-        run_whatweb(target)
-        run_findomain(target)
-        run_gobuster(target)
-        run_nmap(target)
+        print(f"\n{CYAN}[*] Unleashing parallel scanner workforce...{RESET}")
+        
+        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+            tasks = [
+                executor.submit(run_whois, target), # type: ignore
+                executor.submit(run_whatweb, target), # type: ignore
+                executor.submit(run_findomain, target), # type: ignore
+                executor.submit(run_gobuster, target), # type: ignore
+                executor.submit(run_nmap, target)
+            ]
+            
+            concurrent.futures.wait(tasks)
 
-        # Compilation
         print(f"\n{CYAN}[*] Starting Data Analysis and Compiling Report...{RESET}")
         report_data = analyzer.generate_report(RESULTS_DIR, target)
         
