@@ -1,11 +1,11 @@
 # Auto Recon Scanner
 
 ## Description
-Auto Recon Scanner is an automated OSINT and reconnaissance orchestration tool. It chains together several industry-standard pentesting utilities (Nmap, WhatWeb, Gobuster, Findomain) to perform comprehensive attack surface mapping, subsequently aggregating and cleaning the raw outputs into a single, structured JSON report.
+Auto Recon Scanner is an automated OSINT and reconnaissance orchestration tool. It chains together several industry-standard pentesting utilities (Nmap, WhatWeb, ffuf, Findomain) to perform comprehensive attack surface mapping, subsequently aggregating and cleaning the raw outputs into a single, structured JSON report.
 
 ## Features
 - Port and Service Enumeration (Nmap)
-- Hidden Directory Discovery (Gobuster)
+- Hidden Directory Discovery with Auto-Calibration (FFUF)
 - Subdomain Enumeration (Findomain)
 - Web Technology Fingerprinting (WhatWeb)
 - Blazing Fast Multithreading
@@ -34,7 +34,7 @@ If you prefer to run the scripts directly on your host machine, you must ensure 
 1. Install system requirements (Debian/Kali based):
 ```bash
 sudo apt-get update
-sudo apt-get install python3 nmap whatweb gobuster dirb wget unzip
+sudo apt-get install python3 nmap whatweb ffuf dirb wget unzip
 ```
 
 2. Install Findomain manually and place it in your PATH:
