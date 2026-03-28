@@ -20,7 +20,7 @@ def parse_nmap(filepath):
     return open_ports
 
 def parse_whatweb(filepath):
-    technologies = set()
+    technologies: set[str] = set()
     
     if not os.path.exists(filepath):
         print(f"Warning: File not found -> {filepath}")
