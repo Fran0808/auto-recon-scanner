@@ -122,8 +122,8 @@ def run_findomain(target: str) -> None:
         print(f"{RED}[-] findomain failed:{RESET}")
         print(result.stderr)
 
-def run_gobuster(target: str) -> None:
-    script_path = os.path.join(SCRIPTS_DIR, "gobuster.sh")
+def run_ffuf(target: str) -> None:
+    script_path = os.path.join(SCRIPTS_DIR, "ffuf.sh")
 
     result = subprocess.run(
         ["bash", script_path, target],
@@ -132,9 +132,9 @@ def run_gobuster(target: str) -> None:
     )
 
     if result.returncode == 0:
-        output_file = os.path.join(RESULTS_DIR, "gobuster.txt")
+        output_file = os.path.join(RESULTS_DIR, "ffuf.json")
     else:
-        print(f"{RED}[-] gobuster failed:{RESET}")
+        print(f"{RED}[-] ffuf failed:{RESET}")
         print(result.stderr)
 
 def main():
@@ -157,7 +157,7 @@ def main():
                 executor.submit(run_whois, target), # type: ignore
                 executor.submit(run_whatweb, target), # type: ignore
                 executor.submit(run_findomain, target), # type: ignore
-                executor.submit(run_gobuster, target), # type: ignore
+                executor.submit(run_ffuf, target), # type: ignore
                 executor.submit(run_nmap, target)
             ]
             

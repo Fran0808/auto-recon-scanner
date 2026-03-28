@@ -38,26 +38,23 @@ def parse_whatweb(filepath):
                 
     return sorted(list(technologies))
 
-def parse_gobuster(filepath, target=""):
+def parse_ffuf(filepath, target=""):
     directories = []
     
     if not os.path.exists(filepath):
         print(f"Warning: File not found -> {filepath}")
         return directories
 
-    with open(filepath, "r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-           
-            if "(Status:" in line and "429" not in line:
-                parts = line.split()
-                if len(parts) >= 3:
-                    path_str = parts[0].strip('/')
-                    status = parts[2].replace(")", "")
-                    full_url = f"https://{target}/{path_str}" if target else f"/{path_str}"
-                    directories.append({"url": full_url, "status": status})
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            for res in data.get("results", []):
+                directories.append({
+                    "url": res.get("url"),
+                    "status": str(res.get("status"))
+                })
+    except Exception as e:
+        print(f"Warning: Failed to parse FFUF JSON -> {e}")
                     
     return directories
 
@@ -82,13 +79,13 @@ def generate_report(results_dir, target=""):
     """
     nmap_file = os.path.join(results_dir, "nmap.txt")
     whatweb_file = os.path.join(results_dir, "whatweb.txt")
-    gobuster_file = os.path.join(results_dir, "gobuster.txt")
+    ffuf_file = os.path.join(results_dir, "ffuf.json")
     findomain_file = os.path.join(results_dir, "findomain.txt")
 
     report = {
         "open_ports": parse_nmap(nmap_file),
         "web_technologies": parse_whatweb(whatweb_file),
-        "directories": parse_gobuster(gobuster_file, target),
+        "directories": parse_ffuf(ffuf_file, target),
         "subdomains": parse_findomain(findomain_file)
     }
     return report
@@ -101,7 +98,7 @@ def save_report_json(report_data, filepath):
 if __name__ == "__main__":
     nmap_file = os.path.join("results", "nmap.txt")
     whatweb_file = os.path.join("results", "whatweb.txt")
-    gobuster_file = os.path.join("results", "gobuster.txt")
+    ffuf_file = os.path.join("results", "ffuf.json")
     findomain_file = os.path.join("results", "findomain.txt")
     
     print("\n--- Testing Nmap Parser ---")
@@ -116,8 +113,8 @@ if __name__ == "__main__":
         print(f" detected: {t}")
     print(f"Total technologies found: {len(techs)}")
 
-    print("\n--- Testing Gobuster Parser ---")
-    dirs = parse_gobuster(gobuster_file, target="testdomain.com")
+    print("\n--- Testing FFUF Parser ---")
+    dirs = parse_ffuf(ffuf_file, target="testdomain.com")
     for d in dirs:
         print(f"Found URL: {d['url']} | Status: {d['status']}")
     print(f"Total REAL directories found: {len(dirs)}")
