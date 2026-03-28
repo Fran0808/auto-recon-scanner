@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y \
     nmap \
     whois \
     whatweb \
-    gobuster \
+    ffuf \
     dirb \
     wget \
     unzip \
