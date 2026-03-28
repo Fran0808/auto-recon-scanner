@@ -178,11 +178,11 @@ def main():
         analyzer.save_report_json(report_data, report_path)
         
         end_time = time.time()
-        elapsed = end_time - start_time
+        elapsed = (end_time - start_time)/60
 
         print(f"\n{GREEN}=========================================={RESET}")
         print(f"{GREEN}    SCAN COMPLETE FOR: {target}           {RESET}")
-        print(f"{GREEN}    TIME ELAPSED: {elapsed:.2f} seconds    {RESET}")
+        print(f"{GREEN}    TIME ELAPSED: {elapsed:.2f} minutes    {RESET}")
         print(f"{GREEN}=========================================={RESET}")
         
     except KeyboardInterrupt:
