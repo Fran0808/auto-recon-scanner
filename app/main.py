@@ -4,6 +4,7 @@ import os
 import time
 import concurrent.futures
 import analyzer # type: ignore
+import html_generator
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPTS_DIR = os.path.join(BASE_DIR, "scripts")
@@ -176,6 +177,9 @@ def main():
         
         report_path = os.path.join(RESULTS_DIR, "final_report.json")
         analyzer.save_report_json(report_data, report_path)
+        
+        html_path = os.path.join(RESULTS_DIR, "final_report.html")
+        html_generator.generate_html_report(report_data, html_path, target)
         
         end_time = time.time()
         elapsed = (end_time - start_time)/60
