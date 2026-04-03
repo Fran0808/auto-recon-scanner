@@ -110,7 +110,7 @@ def generate_html_report(report_data, filepath, target):
         
     html += """        </div>
 
-        <h2>4. Hidden Directories (FFUF)</h2>
+        <h2>4. Hidden Directories</h2>
         <table>
             <tr><th>Status</th><th>URL</th></tr>
 """
