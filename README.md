@@ -8,7 +8,9 @@ Auto Recon Scanner is an automated OSINT and reconnaissance orchestration tool. 
 - Hidden Directory Discovery with Auto-Calibration (FFUF)
 - Subdomain Enumeration (Findomain)
 - Web Technology Fingerprinting (WhatWeb)
-- Blazing Fast Multithreading
+- Generates a clean, structured report natively
+- Blazing Fast Multithreading: Executes all tools concurrently to dramatically reduce scan times
+- Smart Target Sanitization: Automatically handles and cleans URLs into valid domains seamlessly
 - Automated JSON Report Generation for easy integration with other tools
 
 ## Installation and Usage
