@@ -93,7 +93,6 @@ def generate_report(results_dir, target=""):
 def save_report_json(report_data, filepath):
     with open(filepath, "w", encoding="utf-8") as f:
         json.dump(report_data, f, indent=4)
-    print(f"\n[+] Final OSINT Report saved to: {filepath}")
 
 if __name__ == "__main__":
     nmap_file = os.path.join("results", "nmap.txt")

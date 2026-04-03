@@ -127,4 +127,5 @@ def generate_html_report(report_data, filepath, target):
 
     with open(filepath, "w", encoding="utf-8") as f:
         f.write(html)
-    print(f"[+] Clean Corporate HTML Report saved to: {filepath}")
+
+    print(f"\n[+] Report saved to: {filepath}")

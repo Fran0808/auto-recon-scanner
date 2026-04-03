@@ -200,10 +200,10 @@ def main():
         end_time = time.time()
         elapsed = (end_time - start_time)/60
 
-        print(f"\n{GREEN}=========================================={RESET}")
+        print(f"\n{GREEN}============================================================{RESET}")
         print(f"{GREEN}    SCAN COMPLETE FOR: {target}           {RESET}")
         print(f"{GREEN}    TIME ELAPSED: {elapsed:.2f} minutes    {RESET}")
-        print(f"{GREEN}=========================================={RESET}")
+        print(f"{GREEN}============================================================{RESET}")
         
     except KeyboardInterrupt:
         print(f"\n{RED}Scan has been cancelled by user{RESET}")
