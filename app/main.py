@@ -52,91 +52,107 @@ def filter_whois(raw_output):
 def run_nmap(target: str) -> None:
     script_path = os.path.join(SCRIPTS_DIR, "nmap.sh")
     
-    result = subprocess.run(
-        ["bash", script_path, target],
-        capture_output=True,
-        text=True
-    )
+    try:
+        result = subprocess.run(
+            ["bash", script_path, target],
+            capture_output=True,
+            text=True,
+            timeout=300
+        )
 
-    if result.returncode == 0:
-        output_file = os.path.join(RESULTS_DIR, "nmap.txt")
-    else:
-        print(f"{RED}[-] nmap failed:{RESET}")
-        print(result.stderr)
+        if result.returncode == 0:
+            output_file = os.path.join(RESULTS_DIR, "nmap.txt")
+        else:
+            print(f"{RED}[-] nmap failed:{RESET}")
+            print(result.stderr)
+    except subprocess.TimeoutExpired:
+        print(f"{RED}[-] nmap timed out after 5 minutes{RESET}")
 
 def run_whois(target: str) -> None:
     script_path = os.path.join(SCRIPTS_DIR, "whois.sh")
 
-    result = subprocess.run(
-        ["bash", script_path, target],
-        capture_output=True,
-        text=True
-    )
+    try:
+        result = subprocess.run(
+            ["bash", script_path, target],
+            capture_output=True,
+            text=True,
+            timeout=300
+        )
 
-    if result.returncode == 0:
-        clean_output = filter_whois(result.stdout)
-
-        os.makedirs(RESULTS_DIR, exist_ok=True)
-        output_file = os.path.join(RESULTS_DIR, "whois.txt")
-
-        with open(output_file, "w") as f:
-            f.write(clean_output)
-    else:
-        print(f"{RED}[-] whois failed:{RESET}")
-        print(result.stderr)
+        if result.returncode == 0:
+            clean_output = filter_whois(result.stdout)
+            os.makedirs(RESULTS_DIR, exist_ok=True)
+            output_file = os.path.join(RESULTS_DIR, "whois.txt")
+            with open(output_file, "w") as f:
+                f.write(clean_output)
+        else:
+            print(f"{RED}[-] whois failed:{RESET}")
+            print(result.stderr)
+    except subprocess.TimeoutExpired:
+        print(f"{RED}[-] whois timed out after 5 minutes{RESET}")
 
 def run_whatweb(target: str) -> None:
     script_path = os.path.join(SCRIPTS_DIR, "whatweb.sh")
 
-    result = subprocess.run(
-        ["bash", script_path, target],
-        capture_output=True,
-        text=True
-    )
+    try:
+        result = subprocess.run(
+            ["bash", script_path, target],
+            capture_output=True,
+            text=True,
+            timeout=300
+        )
 
-    if result.returncode == 0:
-        os.makedirs(RESULTS_DIR, exist_ok=True)
-        output_file = os.path.join(RESULTS_DIR, "whatweb.txt")
-
-        with open(output_file, "w") as f:
-            f.write(result.stdout)
-    else:
-        print(f"{RED}[-] whatweb failed:{RESET}")
-        print(result.stderr)
+        if result.returncode == 0:
+            os.makedirs(RESULTS_DIR, exist_ok=True)
+            output_file = os.path.join(RESULTS_DIR, "whatweb.txt")
+            with open(output_file, "w") as f:
+                f.write(result.stdout)
+        else:
+            print(f"{RED}[-] whatweb failed:{RESET}")
+            print(result.stderr)
+    except subprocess.TimeoutExpired:
+        print(f"{RED}[-] whatweb timed out after 5 minutes{RESET}")
 
 def run_findomain(target: str) -> None:
     script_path = os.path.join(SCRIPTS_DIR, "findomain.sh")
 
-    result = subprocess.run(
-        ["bash", script_path, target],
-        capture_output=True,
-        text=True
-    )
+    try:
+        result = subprocess.run(
+            ["bash", script_path, target],
+            capture_output=True,
+            text=True,
+            timeout=300
+        )
 
-    if result.returncode == 0:
-        os.makedirs(RESULTS_DIR, exist_ok=True)
-        output_file = os.path.join(RESULTS_DIR, "findomain.txt")
-
-        with open(output_file, "w") as f:
-            f.write(result.stdout)
-    else:
-        print(f"{RED}[-] findomain failed:{RESET}")
-        print(result.stderr)
+        if result.returncode == 0:
+            os.makedirs(RESULTS_DIR, exist_ok=True)
+            output_file = os.path.join(RESULTS_DIR, "findomain.txt")
+            with open(output_file, "w") as f:
+                f.write(result.stdout)
+        else:
+            print(f"{RED}[-] findomain failed:{RESET}")
+            print(result.stderr)
+    except subprocess.TimeoutExpired:
+        print(f"{RED}[-] findomain timed out after 5 minutes{RESET}")
 
 def run_ffuf(target: str) -> None:
     script_path = os.path.join(SCRIPTS_DIR, "ffuf.sh")
 
-    result = subprocess.run(
-        ["bash", script_path, target],
-        capture_output=True,
-        text=True
-    )
+    try:
+        result = subprocess.run(
+            ["bash", script_path, target],
+            capture_output=True,
+            text=True,
+            timeout=300
+        )
 
-    if result.returncode == 0:
-        output_file = os.path.join(RESULTS_DIR, "ffuf.json")
-    else:
-        print(f"{RED}[-] ffuf failed:{RESET}")
-        print(result.stderr)
+        if result.returncode == 0:
+            output_file = os.path.join(RESULTS_DIR, "ffuf.json")
+        else:
+            print(f"{RED}[-] ffuf failed:{RESET}")
+            print(result.stderr)
+    except subprocess.TimeoutExpired:
+        print(f"{RED}[-] ffuf timed out after 5 minutes{RESET}")
 
 def main():
     if len(sys.argv) < 2:
